@@ -5,6 +5,7 @@ import { StatusBar } from 'expo-status-bar';
 import Signup from './Components/Signup';
 import Login from './Components/Login'
 import Homescreen from './Components/Homescreen';
+import Contacts from './Components/Contacts';
 
 const Stack = createStackNavigator();
 
@@ -20,6 +21,7 @@ class App extends Component {
           <Stack.Screen name="Home" component={Homescreen} />
           <Stack.Screen name="Signup" component={Signup} />
           <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="Contacts" component={Contacts} />
         </Stack.Navigator>
         <StatusBar style="auto" />
       </NavigationContainer>

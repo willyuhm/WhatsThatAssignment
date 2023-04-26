@@ -42,7 +42,8 @@ export default class Login extends Component {
     );
   }
 
-  login(){
+  login = () => {
+    const { navigation } = this.props;
     let to_send = {
       email: this.state.email,
       password: this.state.password
@@ -59,7 +60,7 @@ export default class Login extends Component {
       if (response.status === 200) {
         Alert.alert("Successfully logged in");
         console.log("Success!");
-        // console.log(user_id);
+        navigation.navigate('Contacts');
         return response.json();
       } else if (response.status === 400) {
         console.log("Incorrect Email or Password");
