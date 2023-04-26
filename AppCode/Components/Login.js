@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, TextInput, View, Button, Alert, Stylesheet } from 'react-native';
+import { Text, TextInput, View, Button, Alert } from 'react-native';
 import styles from "./Styles/Styles.js";
 
 export default class Login extends Component {
@@ -7,6 +7,7 @@ export default class Login extends Component {
     super(props);
 
     this.state = {
+      is_loading: true,
       email: null,
       password: null
     }
@@ -31,9 +32,47 @@ export default class Login extends Component {
           onChangeText={password => this.setState({ password })}
           defaultValue={this.state.password}
         />
+
+        <Button
+          title="Log in"
+          onPress={() => this.login()}
+        />
       </View>
       
     );
+  }
+
+  login(){
+    let to_send = {
+      email: this.state.email,
+      password: this.state.password
+    };
+
+    return fetch("http://localhost:3333/api/1.0.0/login", {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(to_send)
+    })
+    .then((response) => {
+      if (response.status === 200) {
+        Alert.alert("Successfully logged in");
+        console.log("Success!");
+        // console.log(user_id);
+        return response.json();
+      } else if (response.status === 400) {
+        console.log("Incorrect Email or Password");
+      } else if (response.status === 500) {
+        console.log("Server error");
+      }
+    })
+    .then((responseJson) => {
+      console.log(responseJson);
+    })
+    .catch((error) => { 
+      console.log(error);
+    })
   }
 
 }
