@@ -38,6 +38,9 @@ export default class Login extends Component {
           title="Log in"
           onPress={() => this.login()}
         />
+
+        <Text style={styles.links}
+        onPress={() => this.signup()}>Sign up here!</Text>
       </View>
       
     );
@@ -85,6 +88,11 @@ export default class Login extends Component {
     .catch((error) => { 
       console.log(error);
     })
+  }
+
+  signup(){
+    const { navigation } = this.props;
+    this.props.navigation.navigate("Signup")
   }
 
 }

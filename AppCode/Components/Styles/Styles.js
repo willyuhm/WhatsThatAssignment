@@ -25,6 +25,9 @@ const styles = StyleSheet.create({
     width: '100%',
     fontSize: 16,
   },
+  links: {
+    color: 'blue',
+  }
 });
 
 export default styles;
