@@ -61,6 +61,7 @@ export default class Signup extends Component {
   }
 
   signup(){
+    const { navigation } = this.props;
     let to_send = {
       first_name: this.state.first_name,
       last_name: this.state.last_name,
@@ -77,7 +78,7 @@ export default class Signup extends Component {
     })
     .then((response) => {
       Alert.alert("Successfully signed up");
-      // this.getData();
+
     })
     .catch((error) => { 
       console.log(error);
