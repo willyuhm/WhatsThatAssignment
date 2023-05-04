@@ -80,7 +80,7 @@ export default class Login extends Component {
 
         // this.setState({"submitted": false});
 
-        this.props.navigation.navigate("Contacts")
+        this.props.navigation.navigate("MainScreen")
       }catch{
         throw "Something went wrong"
       }
