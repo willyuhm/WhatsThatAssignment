@@ -8,38 +8,85 @@ export default class Contacts extends Component {
     super(props);
 
     this.state = {
-      is_loading: true,
+      isLoading: true,
+      contacts: []
+    }
+  }
+  componentDidMount() {
+    this.checkLoggedIn();
+    this.unsubscribe = this.props.navigation.addListener('focus', () => {
+      this.checkLoggedIn();
+    });
+    this.contacts();
+    console.log(this.contacts());
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
+
+  checkLoggedIn = async () => {
+    const value = await AsyncStorage.getItem('whatsthat_session_token');
+    if (value == null) {
+      this.props.navigation.navigate('Login');
     }
   }
 
-  // componentDidMount(){
-  //   this.unsubscribe = this.props.addListener('focus', () => {
-  //     this.checkLoggedIn();
-  //   });
-  // }
-
-  // componentWillUnmount() {
-  //   this.unsubscribe();
-  // }
-
-  // checkLoggedIn = async () => {
-  //   const value = await AsyncStorage.getItem('whatsthat_session_token');
-  //   if (value == null) {
-  //     this.props.navigation.navigate('Login');
-  //   }
-  // }
-
   render() {
+    const { isLoading, contacts } = this.state;
+
+    if (isLoading) {
+      return (
+        <View style={styles.container}>
+          <Text>Loading contacts...</Text>
+        </View>
+      );
+    }
+
     return (
       <View style={styles.container}>
         <Text>This is the Contacts page</Text>
         <Text>If you're seeing this you logged in!</Text>
+
+        {contacts.map(contact => (
+          <View key={contact.id}>
+            <Text>{contact.name}</Text>
+            <Text>{contact.email}</Text>
+          </View>
+        ))}
+
+        {/* <Button 
+          title='Add Contact'
+          onPress={() => this.}
+        /> */}
+
         <Button
-            title='Log out'
-            onPress={() => this.logout()}
-         />
+          title='Log out'
+          onPress={() => this.logout()}
+        />
+
       </View>
     );
+  }
+
+  async contacts(){
+    return fetch("http://localhost:3333/api/1.0.0/contacts", {
+        method: 'get',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Authorization': await AsyncStorage.getItem("whatsthat_session_token")
+        }
+      })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      this.setState({
+        isLoading: false,
+        contacts: responseJson
+      })
+    })
+    .catch((error) => {
+      console.log(error);
+    });
   }
 
   async logout(){
@@ -68,9 +115,5 @@ export default class Contacts extends Component {
     .catch((error) => { 
         console.log(error);
       })
+  }  
 }
-
-    
-}
-
-
