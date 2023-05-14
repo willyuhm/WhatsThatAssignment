@@ -27,7 +27,22 @@ const styles = StyleSheet.create({
   },
   links: {
     color: 'blue',
+  },
+  dropdown: {
+    borderColor: 'black',
+    borderWidth: 1,
+    borderRadius: 4,
+    overflow: 'hidden',
+    marginVertical: 10,
+    marginHorizontal: 20,
+    backgroundColor: 'white',
+    elevation: 3,
+    shadowColor: 'black',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
   }
+
 });
 
 export default styles;

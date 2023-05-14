@@ -6,7 +6,7 @@ import { StatusBar } from 'expo-status-bar';
 import Signup from './Components/Signup';
 import Login from './Components/Login';
 import Contacts from './Components/Contacts';
-// import AddContacts from './AddContact';
+import Search from './Components/Search';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -26,7 +26,7 @@ class App extends Component {
             {() => (
               <Tab.Navigator>
                 <Tab.Screen name="Contacts" component={Contacts} />
-                {/* <Tab.Screen name="Add Contacts" component={AddContacts} /> */}
+                <Tab.Screen name="Search" component={Search} />
               </Tab.Navigator>
             )}
           </Stack.Screen>

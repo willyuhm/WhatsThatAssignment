@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Text, TextInput, View, Button, Alert } from 'react-native';
 import styles from "./Styles/Styles.js";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ViewContact from "./Components/ViewContact.js"
 
 export default class Contacts extends Component {
   constructor(props){
@@ -49,16 +50,11 @@ export default class Contacts extends Component {
         <Text>If you're seeing this you logged in!</Text>
 
         {contacts.map(contact => (
-          <View key={contact.id}>
-            <Text>{contact.name}</Text>
-            <Text>{contact.email}</Text>
+          <View key={contact.user_id}>
+            <Text>{contact.first_name} {contact.last_name}</Text>
+            <Button title='View Contact' onPress={() => this.props.navigation.navigate('ContactView', { userId: contact.user_id })} />
           </View>
         ))}
-
-        {/* <Button 
-          title='Add Contact'
-          onPress={() => this.}
-        /> */}
 
         <Button
           title='Log out'
