@@ -1,21 +1,46 @@
 import React, { Component } from 'react';
 import { Text, View } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import styles from "./Styles/Styles";
+import AddContact from '/Components/AddContact.js';
+
 
 export default class ViewContact extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      contactInfo: null,
+      contact: null,
     };
   }
 
   componentDidMount() {
-    this.viewContact();
+    const { user_id } = this.props.route.params;
+    this.viewContact(user_id);
   }
 
-  viewContact = async () => {
-    const { user_id } = this.props;
+  render() {
+    const { contact } = this.state;
+
+    if (!contact) {
+      return (
+        <View>
+          <Text>Loading contact...</Text>
+        </View>
+      );
+    }
+
+    return (
+      <View style={styles.container}>
+        <Text>Contact Details:</Text>
+        <Text>First Name: {contact.first_name}</Text>
+        <Text>Last Name: {contact.last_name}</Text>
+        <AddContact user_id={contact.user_id} key={`contact-${contact.user_id}`} />
+        {/* Add more contact details here */}
+      </View>
+    );
+  }
+
+  viewContact = async (user_id) => {
     try {
       const response = await fetch(`http://localhost:3333/api/1.0.0/user/${user_id}`, {
         method: 'get',
@@ -26,10 +51,8 @@ export default class ViewContact extends Component {
       });
 
       if (response.status === 200) {
-        const contactInfo = await response.json();
-        this.setState({
-          contactInfo
-        });
+        const contact = await response.json();
+        this.setState({ contact });
       } else if (response.status === 401) {
         console.log('Unauthorized');
       } else if (response.status === 404) {
@@ -40,26 +63,5 @@ export default class ViewContact extends Component {
     } catch (error) {
       console.log(error);
     }
-  };
-
-  render() {
-    const { contactInfo } = this.state;
-
-    if (!contactInfo) {
-      return (
-        <View>
-          <Text>Loading contact information...</Text>
-        </View>
-      );
-    }
-
-    return (
-      <View>
-        <Text>Contact Information:</Text>
-        <Text>Name: {contactInfo.first_name} {contactInfo.last_name}</Text>
-        <Text>Email: {contactInfo.email}</Text>
-        {/* Render other contact details here */}
-      </View>
-    );
   }
 }

@@ -21,12 +21,11 @@ export default class AddContact extends Component {
 
 addContact = async () => {
   const { user_id } = this.props;
-  const url = `http://localhost:3333/api/1.0.0/user/${user_id}/contact`;
 
   try {
     this.setState({ isLoading: true });
 
-    const response = await fetch(url, {
+    const response = await fetch(`http://localhost:3333/api/1.0.0/user/${user_id}/contact`, {
       method: 'post',
       headers: {
         'Content-Type': 'application/json',

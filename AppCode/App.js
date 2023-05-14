@@ -7,12 +7,13 @@ import Signup from './Components/Signup';
 import Login from './Components/Login';
 import Contacts from './Components/Contacts';
 import Search from './Components/Search';
+import ViewContact from './Components/ViewContact';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 class App extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
   }
 
@@ -22,14 +23,19 @@ class App extends Component {
         <Stack.Navigator>
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="Signup" component={Signup} />
-          <Stack.Screen name="MainScreen" options={{headerShown: false}}>
+          <Stack.Screen name="MainScreen" options={{ headerShown: false }}>
             {() => (
               <Tab.Navigator>
-                <Tab.Screen name="Contacts" component={Contacts} />
+                <Tab.Screen name="Contacts" component={Contacts} options={{ title: 'Contacts' }} />
                 <Tab.Screen name="Search" component={Search} />
               </Tab.Navigator>
             )}
           </Stack.Screen>
+          <Stack.Screen
+            name="ViewContact"
+            component={ViewContact}
+            options={{ headerShown: true }}
+          />
         </Stack.Navigator>
         <StatusBar style="auto" />
       </NavigationContainer>

@@ -20,6 +20,10 @@ export default class Search extends Component {
     this.addContactComponent = React.createRef();
   }
 
+  viewContact = (user_id) => {
+    this.props.navigation.navigate('ViewContact', { user_id });
+  }
+
   render() {
     const { searchQuery, searchIn, limit, offset, searchResults, isLoading } = this.state;
   
@@ -70,7 +74,7 @@ export default class Search extends Component {
         {searchResults.map(result => (
           <View key={result.user_id}>
             <Text>{result.given_name} {result.family_name}</Text>
-            <AddContact user_id={result.user_id} key={`contact-${result.user_id}`} />
+            <Button title="View Contact" onPress={() => this.viewContact(result.user_id)} />
           </View>
         ))}
       </View>
