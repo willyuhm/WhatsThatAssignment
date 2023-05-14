@@ -3,6 +3,7 @@ import { Text, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from "./Styles/Styles";
 import AddContact from '/Components/AddContact.js';
+import DeleteContact from '/Components/DeleteContact';
 
 
 export default class ViewContact extends Component {
@@ -35,6 +36,7 @@ export default class ViewContact extends Component {
         <Text>First Name: {contact.first_name}</Text>
         <Text>Last Name: {contact.last_name}</Text>
         <AddContact user_id={contact.user_id} key={`contact-${contact.user_id}`} />
+        <DeleteContact user_id={contact.user_id} key={`contact-${contact.user_id}`} />
         {/* Add more contact details here */}
       </View>
     );
