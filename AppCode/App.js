@@ -8,6 +8,7 @@ import Login from './Components/Login';
 import Contacts from './Components/Contacts';
 import Search from './Components/Search';
 import ViewContact from './Components/ViewContact';
+import UserProfile from './Components/UserProfile';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -28,6 +29,7 @@ class App extends Component {
               <Tab.Navigator>
                 <Tab.Screen name="Contacts" component={Contacts} options={{ title: 'Contacts' }} />
                 <Tab.Screen name="Search" component={Search} />
+                <Tab.Screen name="Your Profile" component={UserProfile} />
               </Tab.Navigator>
             )}
           </Stack.Screen>

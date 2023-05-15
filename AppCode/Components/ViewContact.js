@@ -4,6 +4,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from "./Styles/Styles";
 import AddContact from '/Components/AddContact.js';
 import DeleteContact from '/Components/DeleteContact';
+import BlockContact from '/Components/BlockContact';
+import UnblockContact from '/Components/UnblockContact';
 
 
 export default class ViewContact extends Component {
@@ -35,8 +37,10 @@ export default class ViewContact extends Component {
         <Text>Contact Details:</Text>
         <Text>First Name: {contact.first_name}</Text>
         <Text>Last Name: {contact.last_name}</Text>
-        <AddContact user_id={contact.user_id} key={`contact-${contact.user_id}`} />
-        <DeleteContact user_id={contact.user_id} key={`contact-${contact.user_id}`} />
+        <AddContact user_id={contact.user_id} key={`add-contact-${contact.user_id}`} />
+        <DeleteContact user_id={contact.user_id} key={`delere-contact-${contact.user_id}`} />
+        <BlockContact user_id={contact.user_id} key={`block-contact-${contact.user_id}`} />
+        <UnblockContact user_id={contact.user_id} key={`unblock-contact-${contact.user_id}`} />
         {/* Add more contact details here */}
       </View>
     );
