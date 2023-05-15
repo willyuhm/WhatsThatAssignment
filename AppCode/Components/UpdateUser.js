@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Text, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from "./Styles/Styles";
+import ViewUser from './UserProfile';
 
 export default class UpdateUser extends Component {
   constructor(props) {
@@ -30,7 +31,7 @@ export default class UpdateUser extends Component {
     if (!contact) {
       return (
         <View>
-          <Text>Loading contact...</Text>
+          <Text>Loading profile...</Text>
         </View>
       );
     }

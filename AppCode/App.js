@@ -9,6 +9,7 @@ import Contacts from './Components/Contacts';
 import Search from './Components/Search';
 import ViewContact from './Components/ViewContact';
 import UserProfile from './Components/UserProfile';
+import ViewBlocked from './Components/ViewBlocked';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -36,6 +37,11 @@ class App extends Component {
           <Stack.Screen
             name="ViewContact"
             component={ViewContact}
+            options={{ headerShown: true }}
+          />
+          <Stack.Screen 
+            name="Blocked Contacts"
+            component={ViewBlocked}
             options={{ headerShown: true }}
           />
         </Stack.Navigator>
