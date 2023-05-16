@@ -9,8 +9,11 @@ export default class ChatList extends Component {
 
     this.state = {
       isLoading: true,
-      chats: []
+      chats: [],
+      showPopUp: false,
+      newChatName: '',
     }
+    this.startChat = this.startChat.bind(this);
   }
   componentDidMount() {
     this.checkLoggedIn();
@@ -34,17 +37,20 @@ export default class ChatList extends Component {
   viewChat = async (chat_id) => {
     this.props.navigation.navigate('Chat', { chat_id: chat_id});
   }
+
+  togglePopup = () => {
+    this.setState((prevState) => ({
+      showPopup: !prevState.showPopup,
+    }));
+  };
   
   render() {
-    const { isLoading, chats } = this.state;
+    const { isLoading, chats, showPopup, newChatName } = this.state;
 
     if (isLoading) {
       return (
         <View style={styles.container}>
           <Text>Loading chats...</Text>
-          <Button
-            title="New Chat"
-          />
         </View>
       );
     }
@@ -55,20 +61,33 @@ export default class ChatList extends Component {
         {chats.map(chat => (
           <View key={chat.chat_id}>
             <Text>{chat.name}</Text>
-            <Button title="View Chat" onPress={() => this.viewChat(chat.chat_id)} />
+            <Button title='View Chat' onPress={() => this.viewChat(chat.chat_id)} />
           </View>
         ))}
+        {showPopup && (
+        <View style={styles.popupContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter chat name"
+            onChangeText={(text) => this.setState({ newChatName: text })}
+            value={newChatName}
+          />
+          <Button title="Create" onPress={this.startChat} />
+          <Button title="Cancel" onPress={this.togglePopup} />
+        </View>
+      )}
 
+      <Button title="Start a new chat" onPress={this.togglePopup} />
       </View>
     );
   }
 
   async chats(){
-    return fetch("http://localhost:3333/api/1.0.0/chat", {
+    return fetch('http://localhost:3333/api/1.0.0/chat', {
         method: 'get',
         headers: {
           'Content-Type': 'application/json',
-          'X-Authorization': await AsyncStorage.getItem("whatsthat_session_token")
+          'X-Authorization': await AsyncStorage.getItem('whatsthat_session_token')
         }
       })
     .then((response) => response.json())
@@ -84,23 +103,26 @@ export default class ChatList extends Component {
   }
 
   async startChat(){
-    return fetch("http://localhost:3333/api/1.0.0/chat", {
+    const { newChatName } = this.state;
+    return fetch('http://localhost:3333/api/1.0.0/chat', {
         method: 'post',
         headers: {
           'Content-Type': 'application/json',
-          'X-Authorization': await AsyncStorage.getItem("whatsthat_session_token")
-        }
+          'X-Authorization': await AsyncStorage.getItem('whatsthat_session_token')
+        },
+        body: JSON.stringify({ name: newChatName })
       })
-    .then((response) => response.json())
-    .then((responseJson) => {
-      this.setState({
-
-        chats: responseJson
+      .then((response) => response.json())
+      .then((responseJson) => {
+        this.setState((prevState) => ({
+          chats: [...prevState.chats, responseJson],
+          showPopup: false,
+          newChatName: '',
+        }));
       })
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
 }
