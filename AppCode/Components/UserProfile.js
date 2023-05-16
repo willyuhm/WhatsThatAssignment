@@ -17,7 +17,7 @@ export default class ViewUser extends Component {
 
   loadUser = async () => {
     try {
-      const user_id = await AsyncStorage.getItem("whatsthat_user_id");
+      const user_id = await AsyncStorage.getItem('whatsthat_user_id');
       this.viewUser(user_id);
     } catch (error) {
       console.log(error);
@@ -113,24 +113,24 @@ export default class ViewUser extends Component {
   async logout(){
     const { navigation } = this.props;
     console.log('Logout')
-    return fetch("http://localhost:3333/api/1.0.0/logout", {
+    return fetch('http://localhost:3333/api/1.0.0/logout', {
         method: 'post',
         headers: {
-          'X-Authorization': await AsyncStorage.getItem("whatsthat_session_token")
+          'X-Authorization': await AsyncStorage.getItem('whatsthat_session_token')
         }
       })
     .then(async(response) => {
         if (response.status === 200) {
-          await AsyncStorage.removeItem("whatsthat_session_token")
-          await AsyncStorage.removeItem("whatsthat_user_id")
-          this.props.navigation.navigate("Login")
+          await AsyncStorage.removeItem('whatsthat_session_token')
+          await AsyncStorage.removeItem('whatsthat_user_id')
+          this.props.navigation.navigate('Login')
         } else if (response.status === 401) {
-            console.log("Unauthorised");
-            await AsyncStorage.removeItem("whatsthat_session_token")
-            await AsyncStorage.removeItem("whatsthat_user_id")
-            this.props.navigation.navigate("Login")
+            console.log('Unauthorised');
+            await AsyncStorage.removeItem('whatsthat_session_token')
+            await AsyncStorage.removeItem('whatsthat_user_id')
+            this.props.navigation.navigate('Login')
         } else if (response.status === 500) {
-            console.log("Server error");
+            console.log('Server error');
         }
     })
     .catch((error) => { 

@@ -17,7 +17,7 @@ export default class Contacts extends Component {
     this.checkLoggedIn();
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
       this.checkLoggedIn();
-      this.refreshContacts(); // added to refresh contacts on focus
+      this.refreshContacts(); 
     });
     this.contacts();
   }
@@ -38,7 +38,7 @@ export default class Contacts extends Component {
   }
 
   refreshContacts = () => {
-    this.setState({ isLoading: true }, () => { // set isLoading to true to show loading message while fetching contacts
+    this.setState({ isLoading: true }, () => { 
       this.contacts();
     });
   }

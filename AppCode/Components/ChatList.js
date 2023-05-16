@@ -3,7 +3,7 @@ import { Text, TextInput, View, Button, Alert } from 'react-native';
 import styles from "./Styles/Styles.js";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default class Chats extends Component {
+export default class ChatList extends Component {
   constructor(props){
     super(props);
 
@@ -17,8 +17,7 @@ export default class Chats extends Component {
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
       this.checkLoggedIn();
     });
-    this.contacts();
-    console.log(this.contacts());
+    this.chats();
   }
 
   componentWillUnmount() {
@@ -31,15 +30,21 @@ export default class Chats extends Component {
       this.props.navigation.navigate('Login');
     }
   }
+
+  viewChat = async (chat_id) => {
+    this.props.navigation.navigate('Chat', { chat_id: chat_id});
+  }
   
   render() {
     const { isLoading, chats } = this.state;
-    console.log('Contacts:', contacts);
 
     if (isLoading) {
       return (
         <View style={styles.container}>
           <Text>Loading chats...</Text>
+          <Button
+            title="New Chat"
+          />
         </View>
       );
     }
@@ -48,9 +53,9 @@ export default class Chats extends Component {
       <View style={styles.container}>
 
         {chats.map(chat => (
-          <View key={chat.user_id}>
-            <Text>{chat.name} {chat.last_name}</Text>
-            <Button title="View Chat" onPress={() => this.viewContact(chat.user_id)} />
+          <View key={chat.chat_id}>
+            <Text>{chat.name}</Text>
+            <Button title="View Chat" onPress={() => this.viewChat(chat.chat_id)} />
           </View>
         ))}
 
@@ -59,7 +64,7 @@ export default class Chats extends Component {
   }
 
   async chats(){
-    return fetch("http://localhost:3333/api/1.0.0/chats", {
+    return fetch("http://localhost:3333/api/1.0.0/chat", {
         method: 'get',
         headers: {
           'Content-Type': 'application/json',
@@ -70,11 +75,32 @@ export default class Chats extends Component {
     .then((responseJson) => {
       this.setState({
         isLoading: false,
-        contacts: responseJson
+        chats: responseJson
       })
     })
     .catch((error) => {
       console.log(error);
     });
   }
+
+  async startChat(){
+    return fetch("http://localhost:3333/api/1.0.0/chat", {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Authorization': await AsyncStorage.getItem("whatsthat_session_token")
+        }
+      })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      this.setState({
+
+        chats: responseJson
+      })
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
+
 }

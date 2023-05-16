@@ -41,8 +41,30 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 2,
+  },
+  message: {
+    alignSelf: 'flex-start',
+    fontSize: 16,
+    maxWidth: '70%',
+    padding: 8,
+    backgroundColor: '#ffffff',
+    borderRadius: 8,
+  },
+  chatContainer: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  chatHeader: {
+    justifyContent: 'center',
+    fontSize: 30,
+  },
+  author: {
+    fontWeight: 'bold',
+  },
+  sendMessage: {
+    fontSize: 18,
+    height: 30,
   }
-
 });
 
 export default styles;
