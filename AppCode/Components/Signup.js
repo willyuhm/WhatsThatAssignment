@@ -3,7 +3,7 @@ import { Text, TextInput, View, Button, Alert } from 'react-native';
 import styles from "./Styles/Styles.js";
 
 export default class Signup extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -56,11 +56,11 @@ export default class Signup extends Component {
           onPress={() => this.signup()}
         />
       </View>
-      
+
     );
   }
 
-  signup(){
+  signup() {
     const { navigation } = this.props;
     let to_send = {
       first_name: this.state.first_name,
@@ -76,13 +76,13 @@ export default class Signup extends Component {
       },
       body: JSON.stringify(to_send)
     })
-    .then((response) => {
-      Alert.alert("Successfully signed up");
+      .then((response) => {
+        Alert.alert("Successfully signed up");
 
-    })
-    .catch((error) => { 
-      console.log(error);
-    })
+      })
+      .catch((error) => {
+        console.log(error);
+      })
   }
 
 }
