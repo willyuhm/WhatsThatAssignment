@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Text, TextInput, View, Button, Alert } from 'react-native';
 import styles from "./Styles/Styles.js";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import RefreshableScreen from './RefreshableScreen.js';
 
 export default class Contacts extends Component {
   constructor(props){
@@ -16,9 +17,9 @@ export default class Contacts extends Component {
     this.checkLoggedIn();
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
       this.checkLoggedIn();
+      this.refreshContacts(); // added to refresh contacts on focus
     });
     this.contacts();
-    console.log(this.contacts());
   }
 
   componentWillUnmount() {
@@ -35,10 +36,15 @@ export default class Contacts extends Component {
   viewContact = (user_id) => {
     this.props.navigation.navigate('ViewContact', { user_id });
   }
+
+  refreshContacts = () => {
+    this.setState({ isLoading: true }, () => { // set isLoading to true to show loading message while fetching contacts
+      this.contacts();
+    });
+  }
   
   render() {
     const { isLoading, contacts } = this.state;
-    console.log('Contacts:', contacts);
 
     if (isLoading) {
       return (
@@ -49,19 +55,20 @@ export default class Contacts extends Component {
     }
 
     return (
-      <View style={styles.container}>
-        <Text>This is the Contacts page</Text>
-        <Text>If you're seeing this you logged in!</Text>
+      <RefreshableScreen onRefresh={this.refreshContacts}>
+        <View style={styles.container}>
+          <Text>This is the Contacts page</Text>
+          <Text>If you're seeing this you logged in!</Text>
 
+          {contacts.map(contact => (
+            <View key={contact.user_id}>
+              <Text>{contact.first_name} {contact.last_name}</Text>
+              <Button title="View Contact" onPress={() => this.viewContact(contact.user_id)} />
+            </View>
+          ))}
 
-        {contacts.map(contact => (
-          <View key={contact.user_id}>
-            <Text>{contact.first_name} {contact.last_name}</Text>
-            <Button title="View Contact" onPress={() => this.viewContact(contact.user_id)} />
-          </View>
-        ))}
-
-      </View>
+        </View>
+      </RefreshableScreen>
     );
   }
 

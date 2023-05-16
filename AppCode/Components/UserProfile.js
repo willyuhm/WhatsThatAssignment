@@ -24,8 +24,8 @@ export default class ViewUser extends Component {
     }
   }
 
-  ViewBlockedList = (user_id) => {
-    this.props.navigation.navigate('ViewBlocked', { user_id });
+  viewBlockedList = (user_id) => {
+    this.props.navigation.navigate('Blocked Contacts', { user_id });
   }
 
   render() {
