@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Text, TextInput, View, Button, } from 'react-native';
 import styles from "./Styles/Styles.js";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import RefreshableScreen from './RefreshableScreen.js';
 
 export default class ChatList extends Component {
   constructor(props) {
@@ -44,14 +45,41 @@ export default class ChatList extends Component {
     }));
   };
 
+  refreshChats = () => {
+    this.setState({ isLoading: true }, () => { 
+      this.chats();
+    });
+  }
+
   render() {
     const { isLoading, chats, showPopup, newChatName } = this.state;
 
     if (isLoading) {
       return (
-        <View style={styles.container}>
-          <Text>Loading chats...</Text>
-        </View>
+        <RefreshableScreen onRefresh={this.refreshChats}>
+          <View style={styles.container}>
+            <Text>Loading chats...</Text>
+            {showPopup && (
+            <View style={styles.popupContainer}>
+              <TextInput
+                style={styles.input}
+                placeholder="Enter chat name"
+                onChangeText={(text) => this.setState({ newChatName: text })}
+                value={newChatName}
+              />
+              <View style={styles.button}>
+                <Button title="Create" onPress={this.startChat} />
+              </View>
+              <View style={styles.button}>
+                <Button title="Cancel" onPress={this.togglePopup} />
+              </View>
+            </View>
+          )}
+            <View style={styles.button}>
+              <Button title="Start a new chat" onPress={this.togglePopup} />
+            </View>
+          </View>
+        </RefreshableScreen>
       );
     }
 
