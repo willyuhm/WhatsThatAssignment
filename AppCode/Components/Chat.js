@@ -124,7 +124,7 @@ export default class Chat extends Component {
                         <Text>{message.message}</Text>
                         <Text>Timestamp: {new Date(message.timestamp * 1000).toLocaleString()}</Text>
                         <View style={styles.button}>
-                            <Button title='Delete' onPress={this.deleteChat(message.message_id)}/>
+                            <Button title='Delete' onPress={() => this.deleteChat(message.message_id)} />
                         </View>
                     </View>
                 ))}
