@@ -13,7 +13,7 @@ export default class BlockContact extends Component {
 
   render() {
     return (
-      <View>
+      <View style={styles.button}>
         <Button title="Block Contact" onPress={this.blockContact} />
       </View>
     );

@@ -1,23 +1,28 @@
 import React, { Component } from 'react';
 import { Text, TextInput, View, Button, Alert } from 'react-native';
 import styles from "./Styles/Styles.js";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default class Signup extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      is_loading: true,
-      first_name: null,
-      last_name: null,
-      email: null,
-      password: null
-    }
+      isLoading: true,
+      first_name: '',
+      last_name: '',
+      email: '',
+      password: '',
+      errorMessage: null
+    };
   }
 
   render() {
     return (
       <View style={styles.container}>
+        {this.state.errorMessage ? (
+          <Text style={styles.errorText}>{this.state.errorMessage}</Text>
+        ) : null}
         <Text style={styles.promptText}>Sign up here!</Text>
         <Text style={styles.inputLabel}>First Name:</Text>
         <TextInput
@@ -44,47 +49,65 @@ export default class Signup extends Component {
         />
 
         <Text style={styles.inputLabel}>Password:</Text>
+        <Text style={styles.inputLabel}>
+          (Must be 8 characters long, contain 1 uppercase, 1 number, and 1 special character)
+        </Text>
         <TextInput
           style={styles.input}
           placeholder="Enter Password"
           onChangeText={password => this.setState({ password })}
           value={this.state.password}
+          secureTextEntry
         />
-
-        <Button
-          title="Sign up"
-          onPress={() => this.signup()}
-        />
+        <View style={styles.button}>
+          <Button title="Sign up" onPress={this.signup} />
+        </View>
       </View>
-
     );
   }
 
-  signup() {
+  signup = async () => {
     const { navigation } = this.props;
-    let to_send = {
-      first_name: this.state.first_name,
-      last_name: this.state.last_name,
-      email: this.state.email,
-      password: this.state.password
+    const { first_name, last_name, email, password } = this.state;
+    const toSend = {
+      first_name: first_name,
+      last_name: last_name,
+      email,
+      password
     };
 
-    return fetch("http://localhost:3333/api/1.0.0/user", {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(to_send)
-    })
-      .then((response) => {
-        Alert.alert("Successfully signed up");
+    const PASSWORD_REGX = new RegExp(
+      '^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,30}$'
+    );
 
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-  }
+    if (!PASSWORD_REGX.test(password)) {
+      this.setState({
+        errorMessage:
+          'Password must be 8 characters long and contain at least 1 uppercase letter, 1 number, and 1 special character (!@#$&*)'
+      });
+      return;
+    }
 
+    try {
+      const response = await fetch("http://localhost:3333/api/1.0.0/user", {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(toSend)
+      });
+
+      if (response.status === 200) {
+        Alert.alert('Successfully signed up');
+        this.props.navigation.navigate('Login');
+      } else if (response.status === 400) {
+        throw new Error('Bad Request');
+      } else if (response.status === 500) {
+        throw new Error('Server Error');
+      }
+    } catch (error) {
+      this.setState({ errorMessage: error.message });
+      console.log(error);
+    }
+  };
 }
-
-

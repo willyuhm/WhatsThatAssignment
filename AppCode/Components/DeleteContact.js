@@ -13,7 +13,7 @@ export default class DeleteContact extends Component {
 
   render() {
     return (
-      <View>
+      <View style={styles.button}>
         <Button title="Delete Contact" onPress={this.deleteContact} />
       </View>
     );

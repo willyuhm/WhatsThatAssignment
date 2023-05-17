@@ -13,7 +13,7 @@ export default class UnblockContact extends Component {
 
   render() {
     return (
-      <View>
+      <View style={styles.button}>
         <Button title="Unblock Contact" onPress={this.unblockContact} />
       </View>
     );

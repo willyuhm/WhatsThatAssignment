@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, Button } from 'react-native';
+import { Text, View, Button, TextInput } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from "./Styles/Styles";
 
@@ -8,6 +8,7 @@ export default class ViewUser extends Component {
     super(props);
     this.state = {
       contact: null,
+      isEditing: false,
     };
   }
 
@@ -28,8 +29,23 @@ export default class ViewUser extends Component {
     this.props.navigation.navigate('Blocked Contacts', { user_id });
   }
 
+  toggleEditing = () => {
+    this.setState((prevState) => ({
+      isEditing: !prevState.isEditing,
+    }));
+  };
+  
+  handleInputChange = (field, value) => {
+    this.setState((prevState) => ({
+      contact: {
+        ...prevState.contact,
+        [field]: value,
+      },
+    }));
+  };
+
   render() {
-    const { contact } = this.state;
+    const { contact, isEditing } = this.state;
 
     if (!contact) {
       return (
@@ -42,20 +58,42 @@ export default class ViewUser extends Component {
     return (
       <View style={styles.container}>
         <Text>Your Details:</Text>
-        <Text>Your Name: {contact.first_name} {contact.last_name}</Text>
-        <Text>Email: {contact.email}</Text>
-        {/* Add more contact details here */}
-        <Button
-          title='Edit Profile'
-        />
-        <Button
-          title='Log out'
-          onPress={() => this.logout()}
-        />
-        <Button 
-          title='Blocked Users'
-          onPress={() => this.viewBlockedList(contact.user_id)}
-        />
+        {isEditing ? (
+          <>
+            <TextInput
+              value={contact.first_name}
+              onChangeText={(text) => this.handleInputChange('first_name', text)}
+            />
+            <TextInput
+              value={contact.last_name}
+              onChangeText={(text) => this.handleInputChange('last_name', text)}
+            />
+            <TextInput
+              value={contact.email}
+              onChangeText={(text) => this.handleInputChange('email', text)}
+            />
+          </>
+        ) : (
+          <>
+            <Text>Your Name: {contact.first_name} {contact.last_name}</Text>
+            <Text>Email: {contact.email}</Text>
+          </>
+        )}
+        {isEditing ? (
+          <View style={styles.button}>
+            <Button title='Update Profile' onPress={this.updateUser} />
+          </View>
+        ) : (
+          <View style={styles.button}>
+            <Button title='Edit Profile' onPress={this.toggleEditing} />
+          </View>
+        )}
+        <View style={styles.button}>
+          <Button title='Log out' onPress={() => this.logout()} />
+        </View>
+        <View style={styles.button}>
+          <Button title='Blocked Users' onPress={() => this.viewBlockedList(contact.user_id)} />
+        </View>
       </View>
     );
   }
@@ -85,7 +123,9 @@ export default class ViewUser extends Component {
     }
   }
 
-  updateUser = async (user_id) => {
+  updateUser = async () => {
+    const { contact } = this.state;
+    const { user_id } = contact;
     try {
       const response = await fetch(`http://localhost:3333/api/1.0.0/user/${user_id}`, {
         method: 'patch',
@@ -96,8 +136,9 @@ export default class ViewUser extends Component {
       });
 
       if (response.status === 200) {
-        const contact = await response.json();
+        contact = await response.json();
         this.setState({ contact });
+        this.toggleEditing();
       } else if (response.status === 401) {
         console.log('Unauthorized');
       } else if (response.status === 404) {
@@ -110,30 +151,30 @@ export default class ViewUser extends Component {
     }
   }
 
-  async logout(){
+  async logout() {
     const { navigation } = this.props;
     console.log('Logout')
     return fetch('http://localhost:3333/api/1.0.0/logout', {
-        method: 'post',
-        headers: {
-          'X-Authorization': await AsyncStorage.getItem('whatsthat_session_token')
-        }
-      })
-    .then(async(response) => {
+      method: 'post',
+      headers: {
+        'X-Authorization': await AsyncStorage.getItem('whatsthat_session_token')
+      }
+    })
+      .then(async (response) => {
         if (response.status === 200) {
           await AsyncStorage.removeItem('whatsthat_session_token')
           await AsyncStorage.removeItem('whatsthat_user_id')
           this.props.navigation.navigate('Login')
         } else if (response.status === 401) {
-            console.log('Unauthorised');
-            await AsyncStorage.removeItem('whatsthat_session_token')
-            await AsyncStorage.removeItem('whatsthat_user_id')
-            this.props.navigation.navigate('Login')
+          console.log('Unauthorised');
+          await AsyncStorage.removeItem('whatsthat_session_token')
+          await AsyncStorage.removeItem('whatsthat_user_id')
+          this.props.navigation.navigate('Login')
         } else if (response.status === 500) {
-            console.log('Server error');
+          console.log('Server error');
         }
-    })
-    .catch((error) => { 
+      })
+      .catch((error) => {
         console.log(error);
       })
   }

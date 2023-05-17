@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, TextInput, View, Button, Alert } from 'react-native';
+import { Text, TextInput, View, Button, } from 'react-native';
 import styles from "./Styles/Styles.js";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -61,7 +61,9 @@ export default class ChatList extends Component {
         {chats.map(chat => (
           <View key={chat.chat_id}>
             <Text>{chat.name}</Text>
-            <Button title='View Chat' onPress={() => this.viewChat(chat.chat_id)} />
+            <View style={styles.button}>
+              <Button title='View Chat' onPress={() => this.viewChat(chat.chat_id)} />
+            </View>
           </View>
         ))}
         {showPopup && (
@@ -72,12 +74,17 @@ export default class ChatList extends Component {
               onChangeText={(text) => this.setState({ newChatName: text })}
               value={newChatName}
             />
-            <Button title="Create" onPress={this.startChat} />
-            <Button title="Cancel" onPress={this.togglePopup} />
+            <View style={styles.button}>
+              <Button title="Create" onPress={this.startChat} />
+            </View>
+            <View style={styles.button}>
+              <Button title="Cancel" onPress={this.togglePopup} />
+            </View>
           </View>
         )}
-
-        <Button title="Start a new chat" onPress={this.togglePopup} />
+        <View style={styles.button}>
+          <Button title="Start a new chat" onPress={this.togglePopup} />
+        </View>
       </View>
     );
   }

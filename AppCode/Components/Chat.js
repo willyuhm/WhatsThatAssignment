@@ -44,11 +44,12 @@ export default class Chat extends Component {
                 <Text>Members:</Text>
                 {chat.members.map((member, index) => (
                     <Text key={index}>
-                        {member.first_name} {member.last_name} <Button title='Kick' onPress={() => this.removeUserFromChat(member.user_id)}/>
+                        {member.first_name} {member.last_name} <View style={styles.button}> <Button title='Kick' onPress={() => this.removeUserFromChat(member.user_id)}/> </View>
                     </Text> 
                 ))}
-                <Button title='Close' onPress={this.toggleModal} />
-
+                <View style={styles.button}>
+                    <Button title='Close' onPress={this.toggleModal} />
+                </View>
                 <View>
                     <Text style={styles.chatHeader}>Want to add your Contacts?</Text>
                     {contactList.map((contact, index) => (
@@ -56,10 +57,9 @@ export default class Chat extends Component {
                             <Text>
                                 {contact.first_name} {contact.last_name}
                             </Text>
-                            <Button
-                                title='Add'
-                                onPress={() => this.addUserToChat(contact.user_id)}
-                            />
+                            <View style={styles.button}>
+                                <Button title='Add' onPress={() => this.addUserToChat(contact.user_id)}/>
+                            </View>
                         </View>
                     ))}
                 </View>
@@ -83,7 +83,9 @@ export default class Chat extends Component {
         return (
             <View style={styles.chatContainer}>
                 <Text style={styles.chatHeader}>{chat.name}</Text>
-                <Button title='Chat Details' onPress={this.toggleModal} />
+                <View style={styles.button}>
+                    <Button title='Chat Details' onPress={this.toggleModal} />
+                </View>
                 {reversedMessages.map((message, index) => (
                     <View style={styles.message} key={index}>
                         <Text style={styles.author}>
@@ -99,8 +101,9 @@ export default class Chat extends Component {
                     value={messageInput}
                     onChangeText={this.handleInputChange}
                 />
-                <Button title='Send Message' onPress={this.sendChat} />
-
+                <View style={styles.button}>
+                    <Button title='Send Message' onPress={this.sendChat} />
+                </View>
                 <Modal
                     visible={isModalVisible}
                     animationType="slide"

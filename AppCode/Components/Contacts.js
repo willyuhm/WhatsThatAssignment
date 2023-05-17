@@ -57,13 +57,14 @@ export default class Contacts extends Component {
     return (
       <RefreshableScreen onRefresh={this.refreshContacts}>
         <View style={styles.container}>
-          <Text>This is the Contacts page</Text>
-          <Text>If you're seeing this you logged in!</Text>
-
+          <Text style={styles.promptText}>If you don't see any Contacts</Text>
+          <Text style={styles.promptText}>go to the search tab to add some!</Text>
           {contacts.map(contact => (
             <View key={contact.user_id}>
               <Text>{contact.first_name} {contact.last_name}</Text>
-              <Button title="View Contact" onPress={() => this.viewContact(contact.user_id)} />
+              <View style={styles.button}>
+                <Button style={styles.button} title="View Contact" onPress={() => this.viewContact(contact.user_id)} />
+              </View>
             </View>
           ))}
 

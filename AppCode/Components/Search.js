@@ -64,17 +64,17 @@ export default class Search extends Component {
           value={offset}
           placeholder='Offset...'
         />
-  
-        <Button
-          title='Search'
-          onPress={this.search}
-        />
+        <View style={styles.button}>
+          <Button title='Search' onPress={this.search}/>
+        </View>
   
         {isLoading && <Text>Loading results...</Text>}
         {searchResults.map(result => (
           <View key={result.user_id}>
             <Text>{result.given_name} {result.family_name}</Text>
-            <Button title="View Contact" onPress={() => this.viewContact(result.user_id)} />
+            <View style={styles.button}>
+              <Button title="View Contact" onPress={() => this.viewContact(result.user_id)} />
+            </View>
           </View>
         ))}
       </View>

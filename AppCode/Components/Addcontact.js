@@ -13,7 +13,7 @@ export default class AddContact extends Component {
 
   render() {
     return (
-      <View>
+      <View style={styles.button}>
         <Button title="Add Contact" onPress={this.addContact} />
       </View>
     );
