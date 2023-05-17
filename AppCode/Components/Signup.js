@@ -98,7 +98,6 @@ export default class Signup extends Component {
       });
 
       if (response.status === 200) {
-        Alert.alert('Successfully signed up');
         this.props.navigation.navigate('Login');
       } else if (response.status === 400) {
         throw new Error('Bad Request');

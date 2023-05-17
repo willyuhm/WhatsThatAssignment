@@ -93,6 +93,9 @@ export default class Chat extends Component {
                         </Text>
                         <Text>{message.message}</Text>
                         <Text>Timestamp: {new Date(message.timestamp * 1000).toLocaleString()}</Text>
+                        <View style={styles.button}>
+                            <Button title='Delete' onpPress={this.deleteChat(message.message_id)}/>
+                        </View>
                     </View>
                 ))}
                 <TextInput
@@ -266,5 +269,37 @@ export default class Chat extends Component {
         }
 
         return [];
+    };
+
+    deleteChat = async (message_id) => {
+        const { chat_id } = this.props.route.params;
+
+        try {
+            const response = await fetch(
+                `http://localhost:3333/api/1.0.0/chat/${chat_id}/message/${message_id}`,
+                {
+                    method: 'delete',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Authorization': await AsyncStorage.getItem('whatsthat_session_token')
+                    }
+                }
+            );
+
+            if (response.status === 200) {
+                const updatedChat = await response.json();
+                this.setState({ chat: updatedChat });
+            } else if (response.status === 401) {
+                console.log('Unauthorized');
+            } else if (response.status === 403) {
+                console.log('Forbidden');
+            } else if (response.status === 404) {
+                console.log('Message not found');
+            } else if (response.status === 500) {
+                console.log('Server Error');
+            }
+        } catch (error) {
+            console.log(error);
+        }
     };
 }
