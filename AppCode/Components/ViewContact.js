@@ -41,7 +41,6 @@ export default class ViewContact extends Component {
         <DeleteContact user_id={contact.user_id} key={`delere-contact-${contact.user_id}`} />
         <BlockContact user_id={contact.user_id} key={`block-contact-${contact.user_id}`} />
         <UnblockContact user_id={contact.user_id} key={`unblock-contact-${contact.user_id}`} />
-        {/* Add more contact details here */}
       </View>
     );
   }
