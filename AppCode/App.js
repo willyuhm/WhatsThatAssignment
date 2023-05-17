@@ -12,7 +12,6 @@ import UserProfile from './Components/UserProfile';
 import ViewBlocked from './Components/ViewBlocked';
 import ChatList from './Components/ChatList';
 import Chat from './Components/Chat';
-import ChatDetails from './Components/ChatDetails';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -48,11 +47,6 @@ const App = () => {
         <Stack.Screen
           name='Chat'
           component={Chat}
-          options={{ headerShown: true }}
-        />
-        <Stack.Screen
-          name='Chat Details'
-          component={ChatDetails}
           options={{ headerShown: true }}
         />
       </Stack.Navigator>
