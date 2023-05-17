@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Text, View, Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import styles from './Styles/Styles';
 
 export default class BlockContact extends Component {
   constructor(props) {
