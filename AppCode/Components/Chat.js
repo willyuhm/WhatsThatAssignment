@@ -10,6 +10,8 @@ export default class Chat extends Component {
             chat: null,
             messageInput: '',
             isModalVisible: false,
+            isEditing: false,
+            newChatName: '',
         };
     }
 
@@ -30,13 +32,41 @@ export default class Chat extends Component {
             isModalVisible: !prevState.isModalVisible,
         }));
     };
+    
+    toggleEditing = () => {
+        const { isEditing, chat } = this.state;
+
+        if (isEditing) {
+            this.updateChat(chat.chat_id);
+        } else {
+            this.setState({ isEditing: true, newChatName: chat.name });
+        }
+    };
+
+    handleChatNameChange = (text) => {
+        this.setState({ newChatName: text });
+    };
 
     renderChatDetails = () => {
-        const { chat, contactList } = this.state;
+        const { chat, contactList, isEditing, newChatName } = this.state;
 
         return (
             <ScrollView contentContainerStyle={styles.container}>
-                <Text style={styles.chatHeader}>{chat.name}</Text>
+                {isEditing ? (
+                    <TextInput
+                        style={styles.chatHeaderInput}
+                        value={newChatName}
+                        onChangeText={this.handleChatNameChange}
+                    />
+                ) : (
+                    <Text style={styles.chatHeader}>{chat.name}</Text>
+                )}
+                <View style={styles.button}>
+                    <Button
+                        title={isEditing ? 'Done' : 'Edit Name'}
+                        onPress={this.toggleEditing}
+                    />
+                </View>
                 <Text>Chat Author:</Text>
                 <Text>
                     {chat.creator.first_name} {chat.creator.last_name}
@@ -94,7 +124,7 @@ export default class Chat extends Component {
                         <Text>{message.message}</Text>
                         <Text>Timestamp: {new Date(message.timestamp * 1000).toLocaleString()}</Text>
                         <View style={styles.button}>
-                            <Button title='Delete' onpPress={this.deleteChat(message.message_id)}/>
+                            <Button title='Delete' onPress={this.deleteChat(message.message_id)}/>
                         </View>
                     </View>
                 ))}
@@ -301,5 +331,35 @@ export default class Chat extends Component {
         } catch (error) {
             console.log(error);
         }
-    };
+    };   
+    
+    updateChat = async (chat_id) => {
+        const { newChatName } = this.state;
+
+        try {
+            const response = await fetch(`http://localhost:3333/api/1.0.0/chat/${chat_id}`, {
+                method: 'patch',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Authorization': await AsyncStorage.getItem('whatsthat_session_token')
+                },
+                body: JSON.stringify({ name: newChatName }) // Include the new chat name in the request body
+            });
+
+            if (response.status === 200) {
+                const chat = await response.json();
+                this.setState({ chat, isEditing: false }); // Update the chat and exit editing mode
+            } else if (response.status === 401) {
+                console.log('Unauthorized');
+            } else if (response.status === 403) {
+                console.log('Forbidden')
+            } else if (response.status === 404) {
+                console.log('Chat not found');
+            } else if (response.status === 500) {
+                console.log('Server Error');
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
 }
